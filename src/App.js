@@ -1,23 +1,27 @@
 import logo from './logo.svg';
 import './App.css';
+import axios from 'axios'
+import User from './components/User';
+import React,{useEffect,useState} from 'react'
+import CardSkeleton from './components/Skeleton';
 
 function App() {
+  const [data,setData]=useState([])
+  const [isLoading,setIsLoading]=useState(true)
+  function getUsers(){
+      const endpoint='https://jsonplaceholder.typicode.com/users'
+      axios.get(endpoint)
+      .then(res=>{
+          setData(res.data)
+          setIsLoading(false)
+      })
+  }
+  useEffect(()=>{
+  setTimeout(()=>getUsers(),1000)
+  },[])
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+     {isLoading? <CardSkeleton card={8}/>: <User data={data}/>}
     </div>
   );
 }
